@@ -6,8 +6,8 @@ using SomeEcomThing.EventStore;
 
 namespace SomeEcomThing
 {
-    public class OrderCreator :
-        IHandleCommand<CreateOrder>,
+    public class CheckoutBasketCommandPolicy :
+        IHandleCommand<CheckOutBasket>,
         IApply<ItemAddedToBasket>,
         IApply<ItemRemovedFromBasket>,
         IApply<BasketCheckedOut>
@@ -25,7 +25,7 @@ namespace SomeEcomThing
 
         public void Apply(object unhandled, long _)
         {
-            Trace.Write($"Unhandled event in apply of OrderCreator: {unhandled.GetType().Name}");
+            Trace.Write($"Unhandled event in apply of CheckoutBasketCommandPolicy: {unhandled.GetType().Name}");
         }
 
         public void Apply(ItemAddedToBasket @event, long _)
@@ -77,14 +77,9 @@ namespace SomeEcomThing
             _isCheckedOut = true;
         }
 
-        public Event Handle(CreateOrder command)
+        public Event Handle(CheckOutBasket command)
         {
-            if (!_isCheckedOut)
-            {
-                throw new BasketNotCheckedOutException(command.CustomerId);
-            }
-
-            return new OrderCreated(_items.Values.ToList(), command.CustomerId, command.OrderId);
+            return new BasketCheckedOut(command.BasketId, command.CustomerId);
         }
 
         public class BasketNotCheckedOutException : InvalidOperationException
