@@ -12,7 +12,7 @@ namespace SomeEcomThing
         IApply<ItemRemovedFromBasket>,
         IApply<BasketCheckedOut>
     {
-        private readonly Dictionary<int, OrderItem> _items = new Dictionary<int, OrderItem>();
+        private readonly Dictionary<int, BasketItem> _items = new Dictionary<int, BasketItem>();
         private bool _isCheckedOut;
 
         public void Load(IEnumerable<StreamEvent> events)
@@ -43,13 +43,13 @@ namespace SomeEcomThing
 
         private void AddNewItemToBasket(ItemAddedToBasket @event)
         {
-            var orderItem = new OrderItem(@event.ProductTitle, @event.ProductId, @event.Quantity, @event.Price);
+            var orderItem = new BasketItem(@event.ProductId, @event.Quantity,@event.ProductTitle, @event.Price);
             _items.Add(orderItem.ProductId, orderItem);
         }
 
         private void AddQuantityToItemInBasket(ItemAddedToBasket @event)
         {
-            _items[@event.ProductId] = _items[@event.ProductId].AddItems(@event.Quantity);
+            _items[@event.ProductId] = _items[@event.ProductId].AddQuantity(@event.Quantity);
         }
 
         public void Apply(ItemRemovedFromBasket @event, long _)
@@ -60,7 +60,7 @@ namespace SomeEcomThing
                 return;
             }
 
-            var itemWithReducedQuantity = _items[@event.ProductId].RemoveItems(@event.Quantity);
+            var itemWithReducedQuantity = _items[@event.ProductId].AddQuantity(-@event.Quantity);
             var stillInBasket = itemWithReducedQuantity.Quantity > 0;
             if (stillInBasket)
             {
@@ -79,7 +79,7 @@ namespace SomeEcomThing
 
         public Event Handle(CheckOutBasket command)
         {
-            return new BasketCheckedOut(command.BasketId, command.CustomerId);
+            return new BasketCheckedOut(command.BasketId, command.CustomerId, _items);
         }
 
         public class BasketNotCheckedOutException : InvalidOperationException

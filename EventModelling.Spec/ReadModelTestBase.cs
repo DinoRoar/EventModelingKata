@@ -7,6 +7,10 @@ using SomeEcomThing.EventStore;
 
 namespace EventModelling.Spec
 {
+    /// <summary>
+    /// Note this uses subscriptions to an in memory event store to update the readmodel.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class ReadModelTestBase<T> where T : IReadModel
     {
         protected List<StreamEvent> Events = new List<StreamEvent>();

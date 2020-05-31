@@ -8,6 +8,15 @@ using Xunit;
 
 namespace EventModelling.Spec
 {
+    /// <summary>
+    /// Note this has no reference to an event source.
+    /// In an application in say a controller / application service it would be responsible for taking the
+    /// basket id and loading events.
+    /// </summary>
+    /// <remarks>
+    /// In the case of potentially large streams you can always read backwards if you can find a 0 point (Eg empty basket)
+    /// </remarks>
+    /// <typeparam name="T"></typeparam>
     public class CommandHandlerTestBase<T> where T : Command
     {
         protected readonly List<StreamEvent> Events = new List<StreamEvent>();
