@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using SomeEcomThing.EventStore;
 
-namespace SomeEcomThing
+namespace SomeEcomThing.Basket
 {
     public class CustomerBasketReadModel : IReadModel, IApply<ItemAddedToBasket>, IApply<ItemRemovedFromBasket>, IApply<BasketCreated>
     {

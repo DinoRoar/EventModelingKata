@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using SomeEcomThing.EventStore;
 
-namespace SomeEcomThing
+namespace SomeEcomThing.Basket
 {
     public class CheckoutBasketCommandPolicy :
         IHandleCommand<CheckOutBasket>,
@@ -79,7 +78,7 @@ namespace SomeEcomThing
 
         public Event Handle(CheckOutBasket command)
         {
-            return new BasketCheckedOut(command.BasketId, command.CustomerId, _items);
+            return new BasketCheckedOut(command.BasketId, command.CustomerId, command.Items);
         }
 
         public class BasketNotCheckedOutException : InvalidOperationException

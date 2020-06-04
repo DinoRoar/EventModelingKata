@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using SomeEcomThing;
+using SomeEcomThing.Basket;
+using SomeEcomThing.Order;
 using Xunit;
 
 namespace EventModelling.Spec

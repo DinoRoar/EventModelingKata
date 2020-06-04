@@ -1,6 +1,4 @@
-﻿using SomeEcomThing.EventStore;
-
-namespace SomeEcomThing
+﻿namespace SomeEcomThing.EventStore
 {
     public class CategoryProjection : Projection
     {

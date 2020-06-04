@@ -1,7 +1,19 @@
-namespace SomeEcomThing
+using Newtonsoft.Json;
+using SomeEcomThing.Basket;
+
+namespace SomeEcomThing.Order
 {
     public class OrderItem
     {
+        public string Title { get; }
+
+        public int ProductId { get; }
+
+        public int Quantity { get; }
+
+        public int Price { get; }
+
+        [JsonConstructor]
         public OrderItem(string title, int productId, int quantity, int price)
         {
             Title = title;
@@ -10,10 +22,13 @@ namespace SomeEcomThing
             Price = price;
         }
 
-        public string Title { get; }
-        public int ProductId { get; }
-        public int Quantity { get; }
-        public int Price { get; }
+        public OrderItem(BasketItem item)
+        {
+            Title = item.ProductTitle;
+            ProductId = item.ProductId;
+            Quantity = item.Quantity;
+            Price = item.Price;
+        }
 
         public OrderItem RemoveItems(in int quantity)
         {

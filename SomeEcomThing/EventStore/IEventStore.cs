@@ -13,6 +13,8 @@ namespace SomeEcomThing.EventStore
 
         List<StreamEvent> ReadStream(string streamName);
 
+        StreamPositions GetPosition(string eventStream);
+
         public class InvalidStreamPosition : InvalidOperationException
         {
             public InvalidStreamPosition(string streamName, in long expectedPosition, in long actualPosition)

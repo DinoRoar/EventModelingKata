@@ -13,7 +13,6 @@ namespace EventModelling.Spec
     /// <typeparam name="T"></typeparam>
     public class ReadModelTestBase<T> where T : IReadModel
     {
-        protected List<StreamEvent> Events = new List<StreamEvent>();
         private T _readModel;
         private readonly IEventStore _eventStore;
 
@@ -37,6 +36,7 @@ namespace EventModelling.Spec
 
         private StreamEvent ToStreamEvent(EventInStream @event)
         {
+            var positions = _eventStore.GetPosition(@event.Stream);
             long streamPosition = Events.Count(e => e.StreamName == @event.Stream);
             long globalPosition = Events.Count;
 

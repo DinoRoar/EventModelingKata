@@ -1,4 +1,4 @@
-﻿namespace SomeEcomThing
+﻿namespace SomeEcomThing.Basket
 {
     public class BasketItem
     {

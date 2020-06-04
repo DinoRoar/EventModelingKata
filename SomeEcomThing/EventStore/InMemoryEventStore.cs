@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SomeEcomThing.EventStore
 {
@@ -88,6 +89,12 @@ namespace SomeEcomThing.EventStore
         public List<StreamEvent> ReadStream(string streamName)
         {
             return _streams[streamName];
+        }
+
+        public StreamPositions GetPosition(string eventStream)
+        {
+            var lastEvent = _streams[eventStream].Last();
+            return new StreamPositions(lastEvent.StreamPosition + 1, lastEvent.GlobalPosition + 1);
         }
 
         private static void CheckStreamPosition(StreamEvent streamEvent, long currentPosition)

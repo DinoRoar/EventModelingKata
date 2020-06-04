@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using SomeEcomThing;
 using SomeEcomThing.EventStore;
+using SomeEcomThing.Order;
 using Xunit;
 
 namespace EventModelling.Spec
@@ -13,60 +13,36 @@ namespace EventModelling.Spec
         [Fact]
         public void OnBasketCheckedOut_CreateOrder()
         {
-
+            Given(new List<EventInStream>(), new BasketCheckedOutToOrderCreatedWorker());
         }
     }
 
-    public class BasketCheckedOutToOrderCreatedWorker : 
-        IReadModel, 
-        IApply<BasketCheckedOut>, 
-        IApply<BasketCreated>, 
-        IApply<ItemAddedToBasket>, 
-        IApply<ItemRemovedFromBasket>
+    public class WorkerTestBase<TWorker> 
+        where TWorker : ITurnEventsIntoCommand
     {
-        public void Load(IEnumerable<StreamEvent> events)
+        private readonly IEventStore _eventStore = new InMemoryEventStore();
+        private ITurnEventsIntoCommand _worker;
+
+        protected void Given(List<EventInStream> events, TWorker worker)
         {
-            foreach (var @event in events)
+            _worker = worker;
+            _worker.SubscribeTo(_eventStore);
+
+            var eventInStreams = events.ToList();
+            foreach (var @event in eventInStreams)
             {
-                Apply((dynamic)@event.Event, @event.StreamPosition);
+                var streamEvent = ToStreamEvent(@event);
+                _eventStore.Append(streamEvent);
             }
         }
 
-        public void SubscribeTo(IEventStore eventStore)
+        private StreamEvent ToStreamEvent(EventInStream @event)
         {
-            eventStore.SubscribeToStream("et-BasketCheckedOut", streamEvent =>
-            {
+            long streamPosition = Events.Count(e => e.StreamName == @event.Stream);
+            long globalPosition = Events.Count;
 
-            });
+            var streamEvent = new StreamEvent(@event.Stream, streamPosition, globalPosition, DateTime.Now, @event.Event);
+            return streamEvent;
         }
-
-        public void Apply(object unhandled, long _)
-        {
-            Trace.Write($"Unhandled event in apply of BasketCheckedOutToOrderCreatedWorker: {unhandled.GetType().Name}");
-        }
-
-        public void Apply(BasketCheckedOut @event, long streamPosition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Apply(BasketCreated @event, long streamPosition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Apply(ItemAddedToBasket @event, long streamPosition)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Apply(ItemRemovedFromBasket @event, long streamPosition)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class WorkerTestBase<T>
-    {
     }
 }

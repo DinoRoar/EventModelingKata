@@ -2,7 +2,7 @@ using System;
 using Newtonsoft.Json;
 using SomeEcomThing.EventStore;
 
-namespace SomeEcomThing
+namespace SomeEcomThing.Basket
 {
     public class ItemRemovedFromBasket : Event
     {

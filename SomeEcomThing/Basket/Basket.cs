@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SomeEcomThing
+namespace SomeEcomThing.Basket
 {
     public class Basket
     {
