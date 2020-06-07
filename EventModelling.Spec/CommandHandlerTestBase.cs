@@ -50,10 +50,10 @@ namespace EventModelling.Spec
             assertions((TEvent)actual);
         }
 
-        protected void ThenException<T>() where T:Exception
+        protected void ThenException<TException>() where TException:Exception
         {
             _commandHandler.Load(Events);
-            Assert.Throws<T>(() => _commandHandler.Handle(_command));
+            Assert.Throws<TException>(() => _commandHandler.Handle(_command));
         }
     }
 }

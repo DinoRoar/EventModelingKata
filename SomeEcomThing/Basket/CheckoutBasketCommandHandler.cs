@@ -5,7 +5,7 @@ using SomeEcomThing.EventStore;
 
 namespace SomeEcomThing.Basket
 {
-    public class CheckoutBasketCommandPolicy :
+    public class CheckoutBasketCommandHandler :
         IHandleCommand<CheckOutBasket>,
         IApply<ItemAddedToBasket>,
         IApply<ItemRemovedFromBasket>,

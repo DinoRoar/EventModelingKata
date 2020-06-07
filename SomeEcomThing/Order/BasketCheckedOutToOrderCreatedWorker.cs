@@ -33,8 +33,10 @@ namespace SomeEcomThing.Order
             eventStore.SubscribeToStream("et-BasketCheckedOut", streamEvent =>
             {
                 var e = (BasketCheckedOut) streamEvent.Event;
-                var orderItems = e.Items.Values.Select(i=>new OrderItem(i)).ToList();
-                var createOrderPolicy = new CreateOrderPolicy();
+                var orderItems = e.Items.Select(i=>new OrderItem(i)).ToList();
+                var ordersCreatedStream = eventStore.ReadStream("et-orderCreated");
+                var createOrderPolicy = new CreateOrderHandler();
+                createOrderPolicy.Load(ordersCreatedStream);
                 var orderCreated =
                     createOrderPolicy.Handle(new CreateOrder(e.CustomerId, e.BasketId, orderItems)) as OrderCreated;
                 var @event = new StreamEvent(
@@ -46,6 +48,11 @@ namespace SomeEcomThing.Order
                 eventStore.Append(@event);
 
             });
+        }
+
+        private string BuildOrderId(StreamEvent _)
+        {
+            return Guid.NewGuid().ToString();
         }
 
         public void Apply(object unhandled, long _)

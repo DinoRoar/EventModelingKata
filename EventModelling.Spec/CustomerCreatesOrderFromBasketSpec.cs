@@ -27,14 +27,17 @@ namespace EventModelling.Spec
                 new EventInStream(stream,  new ItemAddedToBasket(_basketId, orderItem.ProductId, orderItem.Price, 2, orderItem.Title)),
                 new EventInStream(stream, new ItemRemovedFromBasket(_basketId, ProductId, 1))
             };
-            _checkoutBasketCommand = new CheckOutBasket(_basketId, _customerId);
+            _checkoutBasketCommand = new CheckOutBasket(_basketId, _customerId, new List<BasketItem>()
+            {
+                new BasketItem(orderItem.ProductId, 1, orderItem.Title, orderItem.Price)
+            });
         }
 
         [Fact]
         public void HappyPath()
         {
             Given(_eventInStreams);
-            When(_checkoutBasketCommand, new CheckoutBasketCommandPolicy());
+            When(_checkoutBasketCommand, new CheckoutBasketCommandHandler());
             var assertions = new Action<BasketCheckedOut>((actual) =>
            {
                Assert.IsType<BasketCheckedOut>(actual);

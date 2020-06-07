@@ -37,8 +37,15 @@ namespace EventModelling.Spec
         private StreamEvent ToStreamEvent(EventInStream @event)
         {
             var positions = _eventStore.GetPosition(@event.Stream);
-            long streamPosition = Events.Count(e => e.StreamName == @event.Stream);
-            long globalPosition = Events.Count;
+            var events = _eventStore.ReadStream(@event.Stream);
+            long streamPosition = 0;
+            long globalPosition = 0;
+            if (events.Any())
+            {
+                streamPosition = events.Last().StreamPosition + 1;
+                globalPosition = events.Last().GlobalPosition + 1;
+            }
+          
 
             var streamEvent = new StreamEvent(@event.Stream, streamPosition, globalPosition, DateTime.Now, @event.Event);
             return streamEvent;

@@ -9,6 +9,7 @@ namespace SomeEcomThing.Order
         public Guid CustomerId { get; }
         public Guid BasketId { get; }
         public List<OrderItem> OrderItems { get; }
+      
 
         public CreateOrder(Guid customerId, Guid basketId, List<OrderItem> orderItems)
         {
@@ -18,7 +19,7 @@ namespace SomeEcomThing.Order
         }
 
         [JsonConstructor]
-        private CreateOrder(Guid customerId, Guid basketId, List<OrderItem> orderItems, string id) : base(id)
+        private CreateOrder(Guid customerId, Guid basketId, List<OrderItem> orderItems, string orderId, string id) : base(id)
         {
             CustomerId = customerId;
             BasketId = basketId;

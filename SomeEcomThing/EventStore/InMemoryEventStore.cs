@@ -88,12 +88,25 @@ namespace SomeEcomThing.EventStore
 
         public List<StreamEvent> ReadStream(string streamName)
         {
+            if (!_streams.ContainsKey(streamName))
+            {
+                return new List<StreamEvent>();
+            }
             return _streams[streamName];
         }
 
         public StreamPositions GetPosition(string eventStream)
         {
-            var lastEvent = _streams[eventStream].Last();
+            if (!_streams.ContainsKey(eventStream))
+            {
+                return new StreamPositions(0, _allEvents.Count);
+            }
+            var streamEvents = _streams[eventStream];
+            if (!streamEvents.Any())
+            {
+                return new StreamPositions(0, _allEvents.Count);
+            }
+            var lastEvent = streamEvents.Last();
             return new StreamPositions(lastEvent.StreamPosition + 1, lastEvent.GlobalPosition + 1);
         }
 
