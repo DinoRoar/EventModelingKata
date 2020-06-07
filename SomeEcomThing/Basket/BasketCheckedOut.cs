@@ -24,7 +24,6 @@ namespace SomeEcomThing.Basket
         {
             BasketId = basketId;
             CustomerId = customerId;
-            
             Items = items;
         }
     }
