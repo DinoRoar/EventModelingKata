@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
-using SomeEcomThing.Basket;
 using SomeEcomThing.EventStore;
 
 namespace SomeEcomThing.Order

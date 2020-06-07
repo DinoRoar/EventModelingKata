@@ -46,13 +46,7 @@ namespace SomeEcomThing.Order
                     DateTime.Now, 
                     orderCreated);
                 eventStore.Append(@event);
-
             });
-        }
-
-        private string BuildOrderId(StreamEvent _)
-        {
-            return Guid.NewGuid().ToString();
         }
 
         public void Apply(object unhandled, long _)
@@ -62,7 +56,7 @@ namespace SomeEcomThing.Order
 
         public void Apply(BasketCheckedOut @event, long streamPosition)
         {
-            throw new NotImplementedException();
+          
         }
     }
 }
