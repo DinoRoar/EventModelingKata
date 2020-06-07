@@ -32,7 +32,7 @@ namespace SomeEcomThing.Order
         {
             eventStore.SubscribeToStream("et-BasketCheckedOut", streamEvent =>
             {
-                var e = (BasketCheckedOut) streamEvent.Event;
+                var e = (BasketCheckedOut) streamEvent.GetOriginatingEvent;
                 var orderItems = e.Items.Select(i=>new OrderItem(i)).ToList();
                 var ordersCreatedStream = eventStore.ReadStream("et-orderCreated");
                 var createOrderPolicy = new CreateOrderHandler();

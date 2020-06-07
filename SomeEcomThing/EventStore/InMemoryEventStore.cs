@@ -30,7 +30,7 @@ namespace SomeEcomThing.EventStore
             {
                 CheckStreamPosition(streamEvent, 0);
                 @event = streamEvent.SetStreamPositions(0, nextGlobalEventVersion);
-                _streams.Add(@event.StreamName, new List<StreamEvent>() { });
+                _streams.Add(@event.StreamName, new List<StreamEvent>() { @event});
             }
             else
             {
@@ -112,12 +112,36 @@ namespace SomeEcomThing.EventStore
 
         private static void CheckStreamPosition(StreamEvent streamEvent, long currentPosition)
         {
-            if (streamEvent.StreamPosition != StreamPositions.Any && streamEvent.StreamPosition != currentPosition)
+            switch (streamEvent.StreamPosition)
             {
-                throw new IEventStore.InvalidStreamPosition(
-                    streamEvent.StreamName,
-                    streamEvent.StreamPosition,
-                    currentPosition);
+                case StreamPositions.CreateNewStream:
+                {
+                    if (currentPosition != 0)
+                    {
+                        throw new IEventStore.InvalidStreamPosition(
+                            streamEvent.StreamName,
+                            streamEvent.StreamPosition,
+                            currentPosition);
+                    }
+
+                    break;
+                }
+                case StreamPositions.Any:
+                {
+                    break;
+                }
+                default:
+                {
+                    if (streamEvent.StreamPosition != currentPosition)
+                    {
+                        throw new IEventStore.InvalidStreamPosition(
+                            streamEvent.StreamName,
+                            streamEvent.StreamPosition,
+                            currentPosition);
+                    }
+
+                    break;
+                }
             }
         }
     }

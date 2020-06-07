@@ -28,7 +28,7 @@ namespace EventModelling.Spec
 
             var streamName = $"basket-{basketId.ToString()}";
             When(new StreamEvent(streamName, 0, 0, DateTime.Now,  basketCheckedOut));
-            Then(streamName, streamEvent =>
+            Then("order-1", streamEvent =>
             {
                 var e = streamEvent.Event as OrderCreated;
                 Assert.IsType<OrderCreated>(e);
@@ -67,7 +67,7 @@ namespace EventModelling.Spec
         protected void Then(string streamName, Action<StreamEvent> asserts)
         {
             var stream = _eventStore.ReadStream(streamName);
-            Assert.NotEmpty(stream);
+            Assert.NotEmpty(stream) ;
             var lastEvent = stream.Last();
             asserts(lastEvent);
         }
